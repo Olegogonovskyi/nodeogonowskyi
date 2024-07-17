@@ -10,6 +10,9 @@ class UserService {
         // check
         return await userRepository.create(newUser)
     }
+    public async getById(userID: number): Promise<IUser> {
+        return await userRepository.getById(userID)
+    }
 }
 
 export const userService = new UserService()
