@@ -1,13 +1,16 @@
-import express from "express"
+import express, {Request, Response, NextFunction} from "express"
+
 import {userRouter} from "./routes/user.router";
-import {IServise} from "./interfaces/IServise";
+import {ApiErrors} from "./errors/error.api.service";
+
 
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use('/users', userRouter)
-app.use("*", (props: IServise) => {
-    const {res, err} = props
+
+app.use((err:ApiErrors, req: Request, res: Response, next: NextFunction) => {
+
     res.status(err.status || 500).json(err.message)
 });
 process.on("uncaughtException", (e) => {
