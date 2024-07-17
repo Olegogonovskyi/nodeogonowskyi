@@ -13,6 +13,9 @@ class UserService {
     public async getById(userID: number): Promise<IUser> {
         return await userRepository.getById(userID)
     }
+    public async delete(userID: number) {
+        return await userRepository.delete(userID)
+    }
 }
 
 export const userService = new UserService()

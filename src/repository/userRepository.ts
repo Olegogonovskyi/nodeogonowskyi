@@ -27,6 +27,16 @@ class UserRepository {
         }
         return user
     }
+    public async delete(userId: number) {
+        const users = await fsService.getAll()
+        const index = users.findIndex(value => value.id === userId)
+        console.log(index)
+        if (index === -1) {
+            throw new ApiErrors('No user with this id', 400)
+        }
+        users.splice(index, 1)
+        await fsService.write(users)
+    }
 }
 
 export const userRepository = new UserRepository()

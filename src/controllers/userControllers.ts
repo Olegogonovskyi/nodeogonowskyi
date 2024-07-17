@@ -33,6 +33,16 @@ try {
     next(e)
 }
     }
+    public async deleteUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = +req.params.id
+            await userService.delete(userId)
+            res.status(201).json('User was deletet')
+        } catch (e) {
+            next(e)
+        }
+
+    }
 }
 
 export const userControllers = new UserControllers()
