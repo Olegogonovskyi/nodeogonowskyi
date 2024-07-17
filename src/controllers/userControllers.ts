@@ -43,6 +43,15 @@ try {
         }
 
     }
+    public async put(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userToChange = req.body as IUser
+            await userService.put(userToChange)
+            res.status(200).json('user changed')
+        } catch (e) {
+            next(e)
+        }
+    }
 }
 
 export const userControllers = new UserControllers()

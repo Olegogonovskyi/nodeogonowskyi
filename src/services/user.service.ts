@@ -16,6 +16,9 @@ class UserService {
     public async delete(userID: number) {
         return await userRepository.delete(userID)
     }
+    public async put(userToChange: IUser): Promise<IUser> {
+        return await userRepository.put(userToChange)
+    }
 }
 
 export const userService = new UserService()

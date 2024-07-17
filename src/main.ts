@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use('/users', userRouter)
 
-app.use((err:ApiErrors, req: Request, res: Response, next: NextFunction) => {
+app.use('*', (err:ApiErrors, req: Request, res: Response, next: NextFunction) => {
 
     res.status(err.status || 500).json(err.message)
 });
