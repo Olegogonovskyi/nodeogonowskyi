@@ -1,7 +1,9 @@
 import express, {Request, Response, NextFunction} from "express"
+import  mongoose  from 'mongoose'
 
 import {userRouter} from "./routes/user.router";
 import {ApiErrors} from "./errors/error.api.service";
+
 
 
 const app = express()
@@ -22,5 +24,6 @@ process.on("uncaughtException", (e) => {
 
 const PORT = 5300
 app.listen(PORT, ()=> {
+    mongoose.connect('mongodb://localhost:27017/mydatabase').then(() => console.log('MongoDB connected'))
     console.log(PORT)
 })
