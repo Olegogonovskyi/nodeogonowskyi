@@ -1,23 +1,15 @@
 import {fsService} from "../fsService";
 import {IUser} from "../interfaces/IUser";
 import {ApiErrors} from "../errors/error.api.service";
+import {UserModel} from "../models/user.model";
 
 class UserRepository {
     public async getAll(): Promise<IUser[]> {
-        return await fsService.getAll()
+        return UserModel.find()
     }
 
-    public async create(newUser: IUser): Promise<IUser> {
-        const users = await fsService.getAll()
-
-        const user = {
-            id: users[users.length - 1].id + 1,
-            name: newUser.name,
-            email: newUser.email
-        }
-        users.push(user)
-        await fsService.write(users)
-        return user
+    public async create(newUser: IUser): Promise<any> {
+        return UserModel.create({...newUser})
     }
 
     public async getById(userId: number): Promise<IUser> {

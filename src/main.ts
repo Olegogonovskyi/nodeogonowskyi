@@ -24,6 +24,6 @@ process.on("uncaughtException", (e) => {
 
 const PORT = 5300
 app.listen(PORT, ()=> {
-    mongoose.connect('mongodb://localhost:27017/mydatabase').then(() => console.log('MongoDB connected'))
+    mongoose.connect('mongodb://localhost:27017/olegbase').then(() => console.log('MongoDB connected'))
     console.log(PORT)
 })
