@@ -1,4 +1,5 @@
 import {Schema, model} from 'mongoose'
+import {IUser} from "../interfaces/IUser";
 
 const schema = new Schema({
     name: {
@@ -16,4 +17,4 @@ const schema = new Schema({
     versionKey:false
 })
 
-export const UserModel = model('user', schema)
+export const UserModel = model<IUser>('user', schema)

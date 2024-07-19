@@ -3,6 +3,7 @@ import  mongoose  from 'mongoose'
 
 import {userRouter} from "./routes/user.router";
 import {ApiErrors} from "./errors/error.api.service";
+import {configs} from "./configs/config";
 
 
 
@@ -21,9 +22,7 @@ process.on("uncaughtException", (e) => {
 });
 
 
-
-const PORT = 5300
-app.listen(PORT, ()=> {
-    mongoose.connect('mongodb://localhost:27017/olegbase').then(() => console.log('MongoDB connected'))
-    console.log(PORT)
+app.listen(configs.APP_PORT, configs.APP_HOST,async ()=> {
+    mongoose.connect(configs.MONGO_URL).then(() => console.log('MongoDB connected'))
+    console.log(configs.APP_PORT)
 })

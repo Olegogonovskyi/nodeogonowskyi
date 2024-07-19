@@ -1,50 +1,31 @@
-import {fsService} from "../fsService";
 import {IUser} from "../interfaces/IUser";
 import {ApiErrors} from "../errors/error.api.service";
 import {UserModel} from "../models/user.model";
 
 class UserRepository {
     public async getAll(): Promise<IUser[]> {
-        return UserModel.find()
+        return  UserModel.find()
     }
 
     public async create(newUser: IUser): Promise<any> {
         return UserModel.create({...newUser})
     }
 
-    public async getById(userId: number): Promise<IUser> {
-        const users = await fsService.getAll()
-        const user = users.find((value) => value.id === userId)
+    public async getById(userId: string): Promise<IUser> {
+        const user = await UserModel.findById(userId)
         if (!user) {
             throw new ApiErrors('No user with this id', 400)
         }
         return user
     }
 
-    public async delete(userId: number) {
-        const users = await fsService.getAll()
-        const index = users.findIndex(value => value.id === userId)
-        console.log(index)
-        if (index === -1) {
-            throw new ApiErrors('No user with this id', 400)
-        }
-        users.splice(index, 1)
-        await fsService.write(users)
+    public async delete(userId: string) {
+        await UserModel.findByIdAndDelete(userId, {})
     }
 
-    public async put(userToChange: IUser): Promise<IUser> {
-        if (!userToChange.id) {
-            throw new ApiErrors('No id, no user to change', 400)
-        }
-        const users = await fsService.getAll()
-        const user = users.find((value) => value.id === userToChange.id)
-        if (!user) {
-            throw new ApiErrors('No user with this id', 400)
-        }
-        if (userToChange.name) user.name = userToChange.name
-        if (userToChange.email) user.email = userToChange.email
-        await fsService.write(users)
-        return user
+    public async put(userID: string, userToChange: IUser): Promise<void> {
+        await UserModel.findByIdAndUpdate(userID, {...userToChange}, {})
+
     }
 }
 

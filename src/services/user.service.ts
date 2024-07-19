@@ -5,19 +5,23 @@ class UserService {
     public async getAll(): Promise<IUser[]> {
         return await userRepository.getAll()
     }
+
     public async create(newUser: IUser): Promise<IUser> {
         // const {name, email} = newUser
         // check
         return await userRepository.create(newUser)
     }
-    public async getById(userID: number): Promise<IUser> {
+
+    public async getById(userID: string): Promise<IUser> {
         return await userRepository.getById(userID)
     }
-    public async delete(userID: number) {
+
+    public async delete(userID: string) {
         return await userRepository.delete(userID)
     }
-    public async put(userToChange: IUser): Promise<IUser> {
-        return await userRepository.put(userToChange)
+
+    public async put(userID: string, userToChange: IUser): Promise<void> {
+        await userRepository.put(userID, userToChange)
     }
 }
 
