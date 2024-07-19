@@ -1,16 +1,24 @@
 import {Schema, model} from 'mongoose'
 import {IUser} from "../interfaces/IUser";
+import {GenderEnum} from "../enums/gender.enum";
 
 const schema = new Schema({
     name: {
         type: String,
         required: true,
-        minlength: [3, 'Name must be at least 3 characters long']
+        minlength: [2, 'Name must be at least 2 characters long']
     },
-    email: {
+    age: {
+        type: Number,
+        Min: 3
+    },
+    superpowers: {
+        type: [String],
+        required: true
+    },
+    gender: {
         type: String,
-        unique: true,
-        trim: true
+        enum: GenderEnum
     }
 }, {
     timestamps: true,

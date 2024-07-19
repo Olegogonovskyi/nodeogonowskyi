@@ -4,11 +4,11 @@ import {UserModel} from "../models/user.model";
 
 class UserRepository {
     public async getAll(): Promise<IUser[]> {
-        return  UserModel.find()
+        return  await UserModel.find()
     }
 
     public async create(newUser: IUser): Promise<any> {
-        return UserModel.create({...newUser})
+        return await UserModel.create(newUser)
     }
 
     public async getById(userId: string): Promise<IUser> {

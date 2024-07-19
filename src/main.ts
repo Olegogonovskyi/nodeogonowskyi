@@ -1,11 +1,8 @@
-import express, {Request, Response, NextFunction} from "express"
-import  mongoose  from 'mongoose'
-
+import express, {Request, Response, NextFunction} from "express";
+import  mongoose  from 'mongoose';
 import {userRouter} from "./routes/user.router";
 import {ApiErrors} from "./errors/error.api.service";
 import {configs} from "./configs/config";
-
-
 
 const app = express()
 app.use(express.json())

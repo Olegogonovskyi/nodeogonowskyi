@@ -1,5 +1,4 @@
 import {Request, Response, NextFunction} from "express"
-
 import {userService} from "../services/user.service";
 import {IUser} from "../interfaces/IUser";
 

@@ -7,8 +7,6 @@ class UserService {
     }
 
     public async create(newUser: IUser): Promise<IUser> {
-        // const {name, email} = newUser
-        // check
         return await userRepository.create(newUser)
     }
 
