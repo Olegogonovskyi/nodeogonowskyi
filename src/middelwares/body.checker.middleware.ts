@@ -25,6 +25,7 @@ class BodyCheckerMiddleware {
                 next()
             } catch (e) {
                 next(e)
+
             }
         }
     }
