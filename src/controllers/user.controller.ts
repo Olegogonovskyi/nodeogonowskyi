@@ -51,7 +51,7 @@ class UserController {
         try {
             const id = req.params.id
             await userService.delete(id)
-            res.status(204)
+            res.status(204).json('deleted')
         } catch (e) {
             next(e)
         }
