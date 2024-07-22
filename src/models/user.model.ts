@@ -4,7 +4,8 @@ import {IUser} from "../intwrfaces/IUser";
 const shema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
