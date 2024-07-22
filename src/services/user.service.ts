@@ -1,25 +1,21 @@
-import {IUser} from "../interfaces/IUser";
+import {IUser} from "../intwrfaces/IUser";
 import {userRepository} from "../repository/userRepository";
 
 class UserService {
-    public async getAll(): Promise<IUser[]> {
+    public async getAll():  Promise<IUser[]> {
         return await userRepository.getAll()
     }
-
-    public async create(newUser: IUser): Promise<IUser> {
+    public async create(newUser: IUser) {
         return await userRepository.create(newUser)
     }
-
-    public async getById(userID: string): Promise<IUser> {
-        return await userRepository.getById(userID)
+    public async findById(id: string): Promise<IUser> {
+        return await userRepository.findById(id)
     }
-
-    public async delete(userID: string) {
-        return await userRepository.delete(userID)
+    public async put(id: string, userToChange: IUser) {
+        return await userRepository.put(id, userToChange)
     }
-
-    public async put(userID: string, userToChange: IUser): Promise<void> {
-        await userRepository.put(userID, userToChange)
+    public async delete(id: string) {
+        return await userRepository.delete(id)
     }
 }
 

@@ -1,31 +1,21 @@
-import {IUser} from "../interfaces/IUser";
-import {ApiErrors} from "../errors/error.api.service";
-import {UserModel} from "../models/user.model";
+import {IUser} from "../intwrfaces/IUser";
+import {userWTHpswModel} from "../models/user.model";
 
 class UserRepository {
     public async getAll(): Promise<IUser[]> {
-        return  await UserModel.find()
+        return await userWTHpswModel.find()
     }
-
-    public async create(newUser: IUser): Promise<any> {
-        return await UserModel.create(newUser)
+    public async create(newUser: IUser) {
+        return await userWTHpswModel.create(newUser)
     }
-
-    public async getById(userId: string): Promise<IUser> {
-        const user = await UserModel.findById(userId)
-        if (!user) {
-            throw new ApiErrors('No user with this id', 400)
-        }
-        return user
+    public async findById(id: string): Promise<IUser> {
+        return await userWTHpswModel.findById(id)
     }
-
-    public async delete(userId: string) {
-        await UserModel.findByIdAndDelete(userId, {})
+    public async put(id: string, userToChange: IUser) {
+        return await userWTHpswModel.findByIdAndUpdate(id, {...userToChange})
     }
-
-    public async put(userID: string, userToChange: IUser): Promise<void> {
-        await UserModel.findByIdAndUpdate(userID, {...userToChange}, {})
-
+    public async delete(id:string) {
+        return await userWTHpswModel.findByIdAndDelete(id)
     }
 }
 

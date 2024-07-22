@@ -4,4 +4,3 @@ export class ApiErrors extends Error {
         this.status = status
     }
 }
-
