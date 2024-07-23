@@ -9,7 +9,7 @@ const schema = new Schema({
 
     },
     refreshtoken: {
-        ype: String,
+        type: String,
         required: true,
     },
     _userId: { type: Schema.Types.ObjectId, required: true, ref: UserModel }
@@ -18,4 +18,4 @@ const schema = new Schema({
     versionKey:false
 })
 
-export const TokenModel = model<ITokenPair>('tokens', schema)
+export const tokenModel = model<ITokenPair>('tokens', schema)

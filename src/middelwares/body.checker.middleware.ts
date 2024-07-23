@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {isValidName} from "../patterns/pattern.service";
+import {isValid} from "../patterns/pattern.service";
 import {ApiErrors} from "../errors/error.api.service";
 
 class BodyCheckerMiddleware {
@@ -13,7 +13,7 @@ class BodyCheckerMiddleware {
                         throw new ApiErrors('ID never change', 400)
                     }
                 }
-                if (!isValidName(name, /^[a-zA-Zа-яА-Я\s]{2,}$/)) {
+                if (!isValid(name, /^[a-zA-Zа-яА-Я\s]{2,}$/)) {
                     throw new ApiErrors('Somesing wrong with your name', 400)
                 }
                 if (!superpowers.length) {

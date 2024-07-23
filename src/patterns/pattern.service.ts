@@ -1,3 +1,3 @@
-export const isValidName = (name: string, pattern: RegExp): boolean => {
+export const isValid = (name: string, pattern: RegExp): boolean => {
     return pattern.test(name);
 }
