@@ -13,6 +13,15 @@ class AuthControllers {
             next(e)
         }
     }
+    public async login(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userToLog = req.body as ICustoner
+            const result = await authService.login(userToLog)
+            res.json(result)
+                } catch (e) {
+                    next(e)
+                }
+    }
 
 }
 

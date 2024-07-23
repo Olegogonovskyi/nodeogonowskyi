@@ -6,9 +6,9 @@ import {configs} from "../configs/config";
 class TokenService {
     public async generePair(payload: ITokenPayload): Promise<ITokenPairGenre> {
         const refreshtoken = jsonwebtoken.sign(payload, configs.JWT_ACCESS_SECRET, {expiresIn: configs.JWT_ACCESS_EXPIRES_IN})
-        console.log(refreshtoken)
+
         const accesstoken = jsonwebtoken.sign(payload, configs.JWT_REFRESH_SECRET, {expiresIn: configs.JWT_REFRESH_EXPIRES_IN})
-        console.log(accesstoken)
+
         return {accesstoken, refreshtoken}
     }
 }

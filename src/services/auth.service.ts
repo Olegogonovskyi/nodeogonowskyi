@@ -24,8 +24,9 @@ class AuthService {
 
     public async login(customer: ICustoner) {
         const {email, password} = customer
+
         const customerFromDb = await customerRepository.findByParams({email})
-        if (!customerFromDb) {
+                if (!customerFromDb) {
             throw new ApiErrors("Invalid credentials", 401);
         }
 
@@ -33,6 +34,19 @@ class AuthService {
         if (!passwordChekker) {
             throw new ApiErrors("Invalid credentials", 401);
         }
+
+        const prewToken = await tokensRepository.findByTokenParams({_userId: customerFromDb._id})
+
+        if (prewToken) {
+            await tokensRepository.deleteTokens({_userId: customerFromDb._id})
+            console.log('isPrew')
+        }
+
+        const tokens = await tokenService.generePair({idUser: customerFromDb._id})
+
+        await tokensRepository.create({...tokens, _userId: customerFromDb._id})
+
+        return {customer, tokens}
     }
 
     public async isEmailDuplicate(email: string): Promise<void> {

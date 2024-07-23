@@ -5,6 +5,7 @@ import {customerChekkerMiddleware} from "../middelwares/customer.chekker.middlew
 const router = Router()
 
 router.post('/register', customerChekkerMiddleware.isCustomerValid(), authControllers.register)
+router.post('/login', customerChekkerMiddleware.isCustomerValid(), authControllers.login)
 
 
 export const authRouter = router
