@@ -3,6 +3,7 @@ import {ITokenPayload} from "../interfaces/ITokenPayload";
 import {ITokenPairGenre} from "../interfaces/ITokenPairGenre";
 import {configs} from "../configs/config";
 import {ApiErrors} from "../errors/error.api.service";
+import {ToknEnam} from "../enums/toknEnam";
 
 class TokenService {
     public async generePair(payload: ITokenPayload): Promise<ITokenPairGenre> {
@@ -12,13 +13,26 @@ class TokenService {
 
         return {accesstoken, refreshtoken}
     }
-    public async checkToken(token: string) {
-        console.log(7)
+
+    public async checkToken(token: string, tokenType: ToknEnam) {
+
         try {
-             return jsonwebtoken.verify(token, configs.JWT_ACCESS_SECRET)
-                } catch (e) {
+            let actuakToken: string
+            switch (tokenType) {
+                case ToknEnam.ACCES:
+                    actuakToken = configs.JWT_ACCESS_SECRET;
+                    break;
+                case ToknEnam.REFRESH:
+                    actuakToken = configs.JWT_REFRESH_SECRET;
+                    break;
+                default:
+                    throw new ApiErrors("Token type is not valid", 401);
+            }
+            return jsonwebtoken.verify(token, actuakToken)
+        } catch (e) {
             throw new ApiErrors("Invalid or expired token", 401)
-                }
+        }
     }
 }
+
 export const tokenService = new TokenService()

@@ -5,6 +5,7 @@ import {passwordService} from "./passwordService";
 import {tokenService} from "./token.service";
 import {tokensRepository} from "../repository/tokensRepository";
 import {ITokenPairGenre} from "../interfaces/ITokenPairGenre";
+import {ITokenPayload} from "../interfaces/ITokenPayload";
 
 class AuthService {
     public async register(customer: ICustoner): Promise<{ newCustomer: ICustoner, tokens: ITokenPairGenre }> {
@@ -26,7 +27,7 @@ class AuthService {
         const {email, password} = customer
 
         const customerFromDb = await customerRepository.findByParams({email})
-                if (!customerFromDb) {
+        if (!customerFromDb) {
             throw new ApiErrors("Invalid credentials", 401);
         }
 
@@ -39,7 +40,7 @@ class AuthService {
 
         if (prewToken) {
             await tokensRepository.deleteTokens({_userId: customerFromDb._id})
-            console.log('isPrew')
+
         }
 
         const tokens = await tokenService.generePair({idUser: customerFromDb._id})
@@ -47,6 +48,18 @@ class AuthService {
         await tokensRepository.create({...tokens, _userId: customerFromDb._id})
 
         return {customer, tokens}
+    }
+
+    public async refresh(jwtPayload: ITokenPayload) {
+
+        await tokensRepository.deleteTokens({_userId: jwtPayload.idUser})
+
+        const tokens = await tokenService.generePair({idUser: jwtPayload.idUser})
+
+        await tokensRepository.create({...tokens, _userId: jwtPayload.idUser})
+
+        return tokens
+
     }
 
     public async isEmailDuplicate(email: string): Promise<void> {

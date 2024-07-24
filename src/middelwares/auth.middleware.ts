@@ -2,28 +2,51 @@ import {NextFunction, Request, Response} from "express";
 import {ApiErrors} from "../errors/error.api.service";
 import {tokenService} from "../services/token.service";
 import {tokensRepository} from "../repository/tokensRepository";
+import {ToknEnam} from "../enums/toknEnam";
 
 class AuthMiddleware {
     public async checkAccesToken(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log(1)
+
             const header = req.headers.authorization;
-console.log(2)
+
             console.log(header)
             if (!header) {
-                console.log(3)
+
                 throw new ApiErrors('Authorization header is missing', 401)
             }
-            console.log(4)
+
             const token = header.split("Bearer ")[1];
-            console.log(token)
-            await tokenService.checkToken(token)
-            console.log(5)
+
+            await tokenService.checkToken(token, ToknEnam.ACCES)
+
             const pair = tokensRepository.findByTokenParams({accesstoken: token})
             if (!pair) {
                 throw new ApiErrors("Token is not valid", 401);
             }
-            console.log(6)
+
+            next()
+        } catch (e) {
+            next(e)
+        }
+    }
+    public async checkRefrToken(req: Request, res: Response, next: NextFunction) {
+        try {
+            const header = req.headers.authorization;
+            if (!header) {
+                throw new ApiErrors('Authorization header is missing', 401)
+            }
+
+            const token = header.split("Bearer ")[1];
+
+            const payload = await tokenService.checkToken(token, ToknEnam.REFRESH)
+            const pair = tokensRepository.findByTokenParams({refreshtoken: token})
+            if (!pair) {
+                throw new ApiErrors("Token is not valid", 401);
+            }
+
+            req.res.locals.jwtPayload = payload;
+
             next()
         } catch (e) {
             next(e)
