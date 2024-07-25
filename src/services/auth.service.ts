@@ -6,20 +6,25 @@ import {tokenService} from "./token.service";
 import {tokensRepository} from "../repository/tokensRepository";
 import {ITokenPairGenre} from "../interfaces/ITokenPairGenre";
 import {ITokenPayload} from "../interfaces/ITokenPayload";
+import {emailService} from "./email.service";
+import {EmailEnum} from "../enums/emailEnam";
 
 class AuthService {
     public async register(customer: ICustoner): Promise<{ newCustomer: ICustoner, tokens: ITokenPairGenre }> {
         const {email, password} = customer
+        console.log(21)
         await this.isEmailDuplicate(email)
-
+console.log(22)
         const hashPassword = await passwordService.hash(password)
-
+console.log(23)
         const newCustomer = await customerRepository.create({...customer, password: hashPassword})
-
+console.log(24)
         const tokens = await tokenService.generePair({idUser: newCustomer._id})
-
+console.log(25)
         await tokensRepository.create({...tokens, _userId: newCustomer._id})
-
+console.log(26)
+        await emailService.sendEmail(EmailEnum.WELCOME, email, {name: email})
+console.log(27)
         return {newCustomer, tokens}
     }
 

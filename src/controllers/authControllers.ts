@@ -6,9 +6,11 @@ import {ITokenPayload} from "../interfaces/ITokenPayload";
 class AuthControllers {
     public async register(req: Request, res: Response, next: NextFunction) {
         try {
+            console.log(11)
             const userToReg = req.body as ICustoner
 
             const result = await authService.register(userToReg)
+            console.log(12)
             res.json(result)
         } catch (e) {
             next(e)

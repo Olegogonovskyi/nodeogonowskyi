@@ -7,13 +7,15 @@ class CustomerChekkerMiddleware {
         return (req: Request, res: Response, next: NextFunction) => {
             const {email, password} = req.body
             try {
-
+                console.log(1)
                 if (!isValid(email, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
                     throw new ApiErrors('wrong email', 401)
                 }
+                console.log(2)
                 if (!isValid(password, /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)) {
                     throw new ApiErrors('in password you must use 1 big letter, 1 little letter and 1 number and special symbol', 401)
                 }
+                console.log(3)
                 next()
             } catch (e) {
                 next(e)
