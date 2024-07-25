@@ -3,6 +3,7 @@ import {authService} from "../services/auth.service";
 import {ICustoner} from "../interfaces/ICustoner";
 import {ITokenPayload} from "../interfaces/ITokenPayload";
 
+
 class AuthControllers {
     public async register(req: Request, res: Response, next: NextFunction) {
         try {
@@ -38,6 +39,7 @@ class AuthControllers {
             next(e)
         }
     }
+
 
 }
 

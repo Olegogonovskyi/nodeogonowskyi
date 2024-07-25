@@ -3,7 +3,6 @@ import nodemailer, { Transporter } from "nodemailer";
 import hbs from "nodemailer-express-handlebars";
 import {configs} from "../configs/config";
 import {EmailEnum} from "../enums/emailEnam";
-
 import {emailConstant} from "../costants/emailCostants";
 import {EmailTypeToPayloadType} from "../types/emailTypes/email-type-to-payload.type";
 import {ApiErrors} from "../errors/error.api.service";
@@ -22,9 +21,7 @@ class EmailService {
             },
         });
 console.log(32)
-        console.log(process.cwd(), "src", "templates", "partials")
-        console.log(process.cwd(), "src", "templates", "layouts")
-        console.log(process.cwd(), "src", "templates", "views")
+
         this.transporter.use(
             "compile",
             hbs({
@@ -50,7 +47,6 @@ console.log(32)
             const {subject, template} = emailConstant[type];
             console.log(subject)
             console.log(template)
-            // context["frontUrl"] = configs.FRONTEND_URL;
             const options = {
                 to,
                 subject,
@@ -58,7 +54,7 @@ console.log(32)
                 context,
             };
             console.log(33)
-            return await this.transporter.sendMail(options);
+            await this.transporter.sendMail(options);
                 } catch (e) {
             throw new ApiErrors("something wrong with emailSender", 401);
                 }

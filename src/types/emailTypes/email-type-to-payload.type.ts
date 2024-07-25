@@ -12,4 +12,8 @@ export type EmailTypeToPayloadType = {
         EmailPayloadCombinedType,
         "name"
     >;
+    [EmailEnum.GOODBYE]: PickRequired<
+        EmailPayloadCombinedType,
+        "name"
+    >;
 };

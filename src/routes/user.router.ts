@@ -13,4 +13,5 @@ router.delete('/:id', authMiddleware.checkAccesToken,idChekkerMiddleware.isIdVal
 router.put('/:id', authMiddleware.checkAccesToken, idChekkerMiddleware.isIdValid('id'), bodyCheckerMiddleware.isBodyValid(true), userControllers.put)
 
 
+
 export const userRouter = router

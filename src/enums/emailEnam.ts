@@ -1,4 +1,5 @@
 export enum EmailEnum {
-    WELCOME = 0,
-    OLD_VISIT = 1
+    WELCOME = 'welcome',
+    OLD_VISIT = 'old-visit',
+    GOODBYE = 'goodbye'
 }

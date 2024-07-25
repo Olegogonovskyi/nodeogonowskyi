@@ -3,6 +3,7 @@ import {userService} from "../services/user.service";
 import {IUser} from "../interfaces/IUser";
 
 
+
 class UserControllers {
     public async getAll(req: Request, res: Response, next: NextFunction) {
         try {
@@ -54,6 +55,7 @@ class UserControllers {
             next(e)
         }
     }
+
 }
 
 export const userControllers = new UserControllers()
