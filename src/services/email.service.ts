@@ -1,5 +1,5 @@
 import path from "node:path";
-import nodemailer, { Transporter } from "nodemailer";
+import nodemailer, {Transporter} from "nodemailer";
 import hbs from "nodemailer-express-handlebars";
 import {configs} from "../configs/config";
 import {EmailEnum} from "../enums/emailEnam";
@@ -19,8 +19,11 @@ class EmailService {
                 user: configs.SMTP_EMAIL,
                 pass: configs.SMTP_PASSWORD,
             },
-        });
+        }
+        );
 console.log(32)
+
+
 
         this.transporter.use(
             "compile",
@@ -54,9 +57,13 @@ console.log(32)
                 context,
             };
             console.log(33)
+            console.log(configs.SMTP_EMAIL)
+            console.log(configs.SMTP_PASSWORD)
             await this.transporter.sendMail(options);
+            console.log(333)
                 } catch (e) {
-            throw new ApiErrors("something wrong with emailSender", 401);
+            console.log(444)
+            throw new ApiErrors("something extreemly wrong with emailSender", 401);
                 }
     }
 
