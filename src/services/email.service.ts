@@ -19,6 +19,9 @@ class EmailService {
                 user: configs.SMTP_EMAIL,
                 pass: configs.SMTP_PASSWORD,
             },
+                tls: {
+                    rejectUnauthorized: false
+                }
         }
         );
 console.log(32)
@@ -62,7 +65,7 @@ console.log(32)
             await this.transporter.sendMail(options);
             console.log(333)
                 } catch (e) {
-            console.log(444)
+            console.log(e)
             throw new ApiErrors("something extreemly wrong with emailSender", 401);
                 }
     }
