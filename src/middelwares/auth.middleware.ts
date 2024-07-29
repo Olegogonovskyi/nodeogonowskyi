@@ -7,24 +7,17 @@ import {ToknEnam} from "../enums/toknEnam";
 class AuthMiddleware {
     public async checkAccesToken(req: Request, res: Response, next: NextFunction) {
         try {
-
             const header = req.headers.authorization;
 
-            console.log(header)
             if (!header) {
-
                 throw new ApiErrors('Authorization header is missing', 401)
             }
-
             const token = header.split("Bearer ")[1];
-
             await tokenService.checkToken(token, ToknEnam.ACCES)
-
             const pair = tokensRepository.findByTokenParams({accesstoken: token})
             if (!pair) {
                 throw new ApiErrors("Token is not valid", 401);
             }
-
             next()
         } catch (e) {
             next(e)
@@ -36,17 +29,13 @@ class AuthMiddleware {
             if (!header) {
                 throw new ApiErrors('Authorization header is missing', 401)
             }
-
             const token = header.split("Bearer ")[1];
-
             const payload = await tokenService.checkToken(token, ToknEnam.REFRESH)
             const pair = tokensRepository.findByTokenParams({refreshtoken: token})
             if (!pair) {
                 throw new ApiErrors("Token is not valid", 401);
             }
-
             req.res.locals.jwtPayload = payload;
-
             next()
         } catch (e) {
             next(e)

@@ -8,14 +8,11 @@ import {ToknEnam} from "../enums/toknEnam";
 class TokenService {
     public async generePair(payload: ITokenPayload): Promise<ITokenPairGenre> {
         const refreshtoken = jsonwebtoken.sign(payload, configs.JWT_REFRESH_SECRET, {expiresIn: configs.JWT_REFRESH_EXPIRES_IN})
-
         const accesstoken = jsonwebtoken.sign(payload, configs.JWT_ACCESS_SECRET, {expiresIn: configs.JWT_ACCESS_EXPIRES_IN})
-
         return {accesstoken, refreshtoken}
     }
 
-    public async checkToken(token: string, tokenType: ToknEnam) {
-
+    public async checkToken(token: string, tokenType: ToknEnam): Promise<boolean> {
         try {
             let actuakToken: string
             switch (tokenType) {

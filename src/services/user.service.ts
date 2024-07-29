@@ -15,7 +15,7 @@ class UserService {
     }
 
     public async delete(userID: string) {
-        return await userRepository.delete(userID)
+        await userRepository.delete(userID)
     }
 
     public async put(userID: string, userToChange: IUser): Promise<void> {
