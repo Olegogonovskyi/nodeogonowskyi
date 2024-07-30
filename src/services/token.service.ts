@@ -34,7 +34,7 @@ class TokenService {
         }
     }
 
-    public async checkToken(token: string, tokenType: ToknEnam): Promise<boolean> {
+    public  checkToken(token: string, tokenType: ToknEnam): ITokenPayload{
         try {
             let actuakToken: string
             switch (tokenType) {
@@ -43,6 +43,9 @@ class TokenService {
                     break;
                 case ToknEnam.REFRESH:
                     actuakToken = configs.JWT_REFRESH_SECRET;
+                    break;
+                case ToknEnam.VERIFIED:
+                    actuakToken = configs.JWT_ACTION_VERIFIED_SECRET
                     break;
                 default:
                     throw new ApiErrors("Token type is not valid", 401);

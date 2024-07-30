@@ -28,9 +28,17 @@ class AuthService {
         const actionVerToken = await tokenService.genreActionToken({idUser: newCustomer._id}, ActionToknEnam.VERIFIED)
         console.log(6)
         console.log(actionVerToken)
-        await actionTokensRepository.create({_userId: newCustomer._id, typeofToken: ActionToknEnam.VERIFIED, actiontoken: actionVerToken})
+        await actionTokensRepository.create({
+            _userId: newCustomer._id,
+            typeofToken: ActionToknEnam.VERIFIED,
+            actiontoken: actionVerToken
+        })
         console.log(7)
-        await emailService.sendEmail(EmailEnum.WELCOME, email, {name: email, frontUrl: configs.FRONTEND_URL, actionToken: actionVerToken})
+        await emailService.sendEmail(EmailEnum.WELCOME, email, {
+            name: email,
+            frontUrl: configs.FRONTEND_URL,
+            actionToken: actionVerToken
+        })
         console.log(8)
         return {newCustomer, tokens}
     }
@@ -59,6 +67,13 @@ class AuthService {
         const tokens = await tokenService.generePair({idUser: jwtPayload.idUser})
         await tokensRepository.create({...tokens, _userId: jwtPayload.idUser})
         return tokens
+    }
+
+    public async verify(userId: string, actionVerToken: string): Promise<any> {
+        await customerRepository.putChanges(userId, {isVeryied: true})
+        await actionTokensRepository.deleteTokens({actiontoken: actionVerToken})
+        return await customerRepository.findByParams({_id: userId})
+
     }
 
     public async isEmailDuplicate(email: string): Promise<void> {

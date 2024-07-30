@@ -12,6 +12,9 @@ class CustomerRepository {
     public async findByParams(params: Partial<ICustoner>): Promise<ICustoner> {
         return await customerModel.findOne(params)
     }
+    public async putChanges(id: string, params: Partial<ICustoner>){
+        await customerModel.findOneAndUpdate({_id: id}, params)
+    }
 
 }
 

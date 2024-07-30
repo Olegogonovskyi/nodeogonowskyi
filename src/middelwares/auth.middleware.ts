@@ -13,7 +13,7 @@ class AuthMiddleware {
                 throw new ApiErrors('Authorization header is missing', 401)
             }
             const token = header.split("Bearer ")[1];
-            await tokenService.checkToken(token, ToknEnam.ACCES)
+            tokenService.checkToken(token, ToknEnam.ACCES)
             const pair = tokensRepository.findByTokenParams({accesstoken: token})
             if (!pair) {
                 throw new ApiErrors("Token is not valid", 401);
@@ -23,6 +23,7 @@ class AuthMiddleware {
             next(e)
         }
     }
+
     public async checkRefrToken(req: Request, res: Response, next: NextFunction) {
         try {
             const header = req.headers.authorization;
@@ -30,7 +31,7 @@ class AuthMiddleware {
                 throw new ApiErrors('Authorization header is missing', 401)
             }
             const token = header.split("Bearer ")[1];
-            const payload = await tokenService.checkToken(token, ToknEnam.REFRESH)
+            const payload = tokenService.checkToken(token, ToknEnam.REFRESH)
             const pair = tokensRepository.findByTokenParams({refreshtoken: token})
             if (!pair) {
                 throw new ApiErrors("Token is not valid", 401);
@@ -41,6 +42,21 @@ class AuthMiddleware {
             next(e)
         }
     }
+
+    // public async checkActionToken(req: Request, res: Response, next: NextFunction) {
+    //     try {
+    //         const actionVerToken = req.body.token
+    //         if (!actionVerToken) {
+    //             throw new ApiErrors(' Verify token is missing', 401)
+    //         }
+    //         const payload = tokenService.checkToken(actionVerToken, ToknEnam.VERIFIED)
+    //         req.res.locals.jwtPayload = payload
+    //
+    //     } catch (e) {
+    //         throw new ApiErrors(' Verify token is not valid', 401)
+    //     }
+    // }
+
 }
 
 export const authMiddleware = new AuthMiddleware()

@@ -33,6 +33,17 @@ class AuthControllers {
             next(e)
         }
     }
+    public async verify(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = req.res.locals.jwtPayload
+            console.log(userId)
+            const actionVerToken = req.res.locals.actionVerToken
+            const result = await authService.verify(userId, actionVerToken)
+            res.status(200).json(result)
+        } catch (e) {
+            next(e)
+        }
+    }
 }
 
 export const authControllers = new AuthControllers()
