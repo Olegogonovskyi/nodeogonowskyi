@@ -9,7 +9,6 @@ import {ApiErrors} from "../errors/error.api.service";
 
 class EmailService {
     private transporter: Transporter;
-
     constructor() {
         console.log(31)
         this.transporter = nodemailer.createTransport({
@@ -24,10 +23,6 @@ class EmailService {
                 }
         }
         );
-console.log(32)
-
-
-
         this.transporter.use(
             "compile",
             hbs({
@@ -40,10 +35,8 @@ console.log(32)
                 viewPath: path.join(process.cwd(), "src", "templates", "views"),
                 extName: ".hbs",
             }),
-
         );
     }
-
     public async sendEmail<T extends EmailEnum>(
         type: T,
         to: string,
@@ -51,15 +44,12 @@ console.log(32)
     ): Promise<void> {
         try {
             const {subject, template} = emailConstant[type];
-            console.log(subject)
-            console.log(template)
             const options = {
                 to,
                 subject,
                 template,
                 context,
             };
-            console.log(33)
             console.log(configs.SMTP_EMAIL)
             console.log(configs.SMTP_PASSWORD)
             await this.transporter.sendMail(options);

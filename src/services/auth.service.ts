@@ -8,16 +8,30 @@ import {ITokenPairGenre} from "../interfaces/ITokenPairGenre";
 import {ITokenPayload} from "../interfaces/ITokenPayload";
 import {emailService} from "./email.service";
 import {EmailEnum} from "../enums/emailEnam";
+import {ActionToknEnam} from "../enums/actionToknEnam";
+import {configs} from "../configs/config";
+import {actionTokensRepository} from "../repository/actionTokensRepository";
 
 class AuthService {
     public async register(customer: ICustoner): Promise<{ newCustomer: ICustoner, tokens: ITokenPairGenre }> {
         const {email, password} = customer
         await this.isEmailDuplicate(email)
+        console.log(1)
         const hashPassword = await passwordService.hash(password)
+        console.log(2)
         const newCustomer = await customerRepository.create({...customer, password: hashPassword})
+        console.log(3)
         const tokens = await tokenService.generePair({idUser: newCustomer._id})
+        console.log(4)
         await tokensRepository.create({...tokens, _userId: newCustomer._id})
-        await emailService.sendEmail(EmailEnum.WELCOME, email, {name: email})
+        console.log(5)
+        const actionVerToken = await tokenService.genreActionToken({idUser: newCustomer._id}, ActionToknEnam.VERIFIED)
+        console.log(6)
+        console.log(actionVerToken)
+        await actionTokensRepository.create({_userId: newCustomer._id, typeofToken: ActionToknEnam.VERIFIED, actiontoken: actionVerToken})
+        console.log(7)
+        await emailService.sendEmail(EmailEnum.WELCOME, email, {name: email, frontUrl: configs.FRONTEND_URL, actionToken: actionVerToken})
+        console.log(8)
         return {newCustomer, tokens}
     }
 

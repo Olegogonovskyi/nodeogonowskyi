@@ -1,5 +1,6 @@
 export type EmailPayloadCombinedType = {
     name?: string;
-    // frontUrl?: string
+    frontUrl?: string,
+    actionToken?: string
 
 };

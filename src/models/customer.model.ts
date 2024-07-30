@@ -10,6 +10,11 @@ const shema = new Schema({
         password: {
             type: String,
             required: true
+        },
+        isVeryied: {
+            type: Boolean,
+            required: true,
+            default: false
         }
     },
     {
