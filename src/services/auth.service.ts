@@ -16,17 +16,11 @@ class AuthService {
     public async register(customer: ICustoner): Promise<{ newCustomer: ICustoner, tokens: ITokenPairGenre }> {
         const {email, password} = customer
         await this.isEmailDuplicate(email)
-        console.log(1)
         const hashPassword = await passwordService.hash(password)
-        console.log(2)
         const newCustomer = await customerRepository.create({...customer, password: hashPassword})
-        console.log(3)
         const tokens = await tokenService.generePair({idUser: newCustomer._id})
-        console.log(4)
         await tokensRepository.create({...tokens, _userId: newCustomer._id})
-        console.log(5)
         const actionVerToken = await tokenService.genreActionToken({idUser: newCustomer._id}, ActionToknEnam.VERIFIED)
-        console.log(6)
         console.log(actionVerToken)
         await actionTokensRepository.create({
             _userId: newCustomer._id,
