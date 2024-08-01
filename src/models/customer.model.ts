@@ -1,7 +1,7 @@
-import {Schema, model} from 'mongoose'
+import mongoose, { Schema } from 'mongoose';
 import {ICustoner} from "../interfaces/ICustoner";
 
-const shema = new Schema({
+const schema = new Schema({
         email: {
             type: String,
             required: true,
@@ -11,10 +11,7 @@ const shema = new Schema({
             type: String,
             required: true
         },
-    allPasswords: {
-            type: [String]
-    },
-        isVeryied: {
+            isVeryied: {
             type: Boolean,
             required: true,
             default: false
@@ -24,4 +21,4 @@ const shema = new Schema({
         timestamps: true,
         versionKey: false
     })
-export const customerModel = model<ICustoner>('customer', shema)
+export const customerModel = mongoose.model<ICustoner>('customer', schema)

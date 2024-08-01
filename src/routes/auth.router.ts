@@ -14,6 +14,6 @@ router.post('/login',  customerChekkerMiddleware.isCustomerValid(), authControll
 router.post('/refresh',   authMiddleware.checkRefrToken, authControllers.refresh)
 router.post('/verify',   actionTokenMiddleware.checkToken(ToknEnam.VERIFIED), authControllers.verify)
 router.post('/changePassword', authMiddleware.checkAccesToken, changePasswordChekkerMiddleware.isCustomerValid(), authControllers.changePassword  )
-
+// todo crona, chek password
 
 export const authRouter = router

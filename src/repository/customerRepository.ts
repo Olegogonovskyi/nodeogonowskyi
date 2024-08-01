@@ -6,7 +6,7 @@ class CustomerRepository {
         return await customerModel.find()
     }
 
-    public async create(newUser: ICustoner): Promise<any> {
+    public async create(newUser: ICustoner): Promise<ICustoner> {
         return await customerModel.create(newUser)
     }
 
@@ -18,13 +18,13 @@ class CustomerRepository {
         await customerModel.findOneAndUpdate({_id: id}, params)
     }
 
-    public async pushToPasswords(customerId: string, lastPasswors: string) {
-        await customerModel.findByIdAndUpdate(customerId, { $push: { allPasswords: lastPasswors } },
-            { new: true })
-    }
-    public async findOldPasswords(): Promise<string[]> {
-        return await customerModel.find({}, 'allPasswords')
-    }
+    // public async pushToPasswords(customerId: string, lastPasswors: string) {
+    //     await customerModel.findByIdAndUpdate(customerId, { $push: { allPasswords: lastPasswors } },
+    //         { new: true })
+    // }
+    // public async findOldPasswords(): Promise<string[]> {
+    //     return await customerModel.find({}, 'allPasswords')
+    // }
 
 }
 

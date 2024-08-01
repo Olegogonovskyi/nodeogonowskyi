@@ -1,4 +1,4 @@
-import {Schema, model} from 'mongoose'
+import mongoose, { Schema } from 'mongoose';
 import {UserModel} from "./user.model";
 import {ActionToknEnam} from "../enums/actionToknEnam";
 import {IActionToken} from "../interfaces/IActionToken";
@@ -19,4 +19,4 @@ const schema = new Schema({
     versionKey:false
 })
 
-export const actionTokenModel = model<IActionToken>('actionTokens', schema)
+export const actionTokenModel = mongoose.model<IActionToken>('actionTokens', schema)

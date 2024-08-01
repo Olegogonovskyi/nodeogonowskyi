@@ -11,16 +11,22 @@ import {EmailEnum} from "../enums/emailEnam";
 import {ActionToknEnam} from "../enums/actionToknEnam";
 import {configs} from "../configs/config";
 import {actionTokensRepository} from "../repository/actionTokensRepository";
+import {allPasswordsRepository} from "../repository/allPasswordsRepository";
 
 class AuthService {
     public async register(customer: ICustoner): Promise<{ newCustomer: ICustoner, tokens: ITokenPairGenre }> {
         const {email, password} = customer
+        console.log(1)
         await this.isEmailDuplicate(email)
+        console.log(2)
         const hashPassword = await passwordService.hash(password)
+        console.log(3)
         const newCustomer = await customerRepository.create({...customer, password: hashPassword})
-        await customerRepository.pushToPasswords(newCustomer._id, hashPassword)
+        console.log(4)
         const tokens = await tokenService.generePair({idUser: newCustomer._id})
+        console.log(5)
         await tokensRepository.create({...tokens, _userId: newCustomer._id})
+        await allPasswordsRepository.create({password: hashPassword, _userId:newCustomer._id })
         const actionVerToken = await tokenService.genreActionToken({idUser: newCustomer._id}, ActionToknEnam.VERIFIED)
         console.log(actionVerToken)
         await actionTokensRepository.create({
@@ -75,10 +81,21 @@ class AuthService {
         if (!passwordChekker) {
             throw new ApiErrors("Invalid credentials", 401);
         }
+        const oldPasswords = await allPasswordsRepository.findAll(_userId)
+        oldPasswords.map(oldPass => {
+            let chekker =  passwordService.compare(newPassword, oldPass.password)
+            if  (chekker) {
+                throw new ApiErrors("It was Your old Password", 401);
+            }
+        })
+
         const newPasswordHased = await passwordService.hash(newPassword)
+        console.log(1)
+        await allPasswordsRepository.create({password: newPasswordHased, _userId: _userId})
+        console.log(2)
         await customerRepository.putChanges(_userId, {password: newPasswordHased})
         await tokensRepository.deleteAll({_userId: _userId})
-        await customerRepository.pushToPasswords(_userId, newPasswordHased)
+
         return newPasswordHased
     }
 

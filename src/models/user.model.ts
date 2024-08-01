@@ -1,4 +1,4 @@
-import {Schema, model} from 'mongoose'
+import mongoose, { Schema } from 'mongoose';
 import {IUser} from "../interfaces/IUser";
 import {GenderEnum} from "../enums/gender.enum";
 
@@ -25,4 +25,4 @@ const schema = new Schema({
     versionKey:false
 })
 
-export const UserModel = model<IUser>('user', schema)
+export const UserModel = mongoose.model<IUser>('user', schema)
