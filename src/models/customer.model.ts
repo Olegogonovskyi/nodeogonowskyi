@@ -11,6 +11,9 @@ const shema = new Schema({
             type: String,
             required: true
         },
+    allPasswords: {
+            type: [String]
+    },
         isVeryied: {
             type: Boolean,
             required: true,
