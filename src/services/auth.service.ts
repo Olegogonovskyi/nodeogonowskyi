@@ -18,6 +18,7 @@ class AuthService {
         await this.isEmailDuplicate(email)
         const hashPassword = await passwordService.hash(password)
         const newCustomer = await customerRepository.create({...customer, password: hashPassword})
+        await customerRepository.pushToPasswords(newCustomer._id, hashPassword)
         const tokens = await tokenService.generePair({idUser: newCustomer._id})
         await tokensRepository.create({...tokens, _userId: newCustomer._id})
         const actionVerToken = await tokenService.genreActionToken({idUser: newCustomer._id}, ActionToknEnam.VERIFIED)
@@ -27,13 +28,11 @@ class AuthService {
             typeofToken: ActionToknEnam.VERIFIED,
             actiontoken: actionVerToken
         })
-        console.log(7)
         await emailService.sendEmail(EmailEnum.WELCOME, email, {
             name: email,
             frontUrl: configs.FRONTEND_URL,
             actionToken: actionVerToken
         })
-        console.log(8)
         return {newCustomer, tokens}
     }
 
@@ -63,12 +62,26 @@ class AuthService {
         return tokens
     }
 
-    public async verify(userId: string, actionVerToken: string): Promise<any> {
+    public async verify(userId: string, actionVerToken: string): Promise<ICustoner> {
         await customerRepository.putChanges(userId, {isVeryied: true})
         await actionTokensRepository.deleteTokens({actiontoken: actionVerToken})
         return await customerRepository.findByParams({_id: userId})
-
     }
+
+    public async changePassword(accesToken: string, newPassword: string, oldPassword: string): Promise<string> {
+        const {_userId} = await tokensRepository.findByTokenParams({accesstoken: accesToken})
+        const {password} = await customerRepository.findByParams({_id: _userId})
+        const passwordChekker = await passwordService.compare(oldPassword, password)
+        if (!passwordChekker) {
+            throw new ApiErrors("Invalid credentials", 401);
+        }
+        const newPasswordHased = await passwordService.hash(newPassword)
+        await customerRepository.putChanges(_userId, {password: newPasswordHased})
+        await tokensRepository.deleteAll({_userId: _userId})
+        await customerRepository.pushToPasswords(_userId, newPasswordHased)
+        return newPasswordHased
+    }
+
 
     public async isEmailDuplicate(email: string): Promise<void> {
         const customer = await customerRepository.findByParams({email})

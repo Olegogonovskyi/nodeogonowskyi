@@ -3,20 +3,27 @@ import {customerModel} from "../models/customer.model";
 
 class CustomerRepository {
     public async getAll(): Promise<ICustoner[]> {
-        return  await customerModel.find()
+        return await customerModel.find()
     }
 
     public async create(newUser: ICustoner): Promise<any> {
         return await customerModel.create(newUser)
     }
+
     public async findByParams(params: Partial<ICustoner>): Promise<ICustoner> {
         return await customerModel.findOne(params)
     }
-    public async putChanges(id: string, params: Partial<ICustoner>){
+
+    public async putChanges(id: string, params: Partial<ICustoner>) {
         await customerModel.findOneAndUpdate({_id: id}, params)
     }
-    public async pushToPasswords(lastPasswors: string) {
 
+    public async pushToPasswords(customerId: string, lastPasswors: string) {
+        await customerModel.findByIdAndUpdate(customerId, { $push: { allPasswords: lastPasswors } },
+            { new: true })
+    }
+    public async findOldPasswords(): Promise<string[]> {
+        return await customerModel.find({}, 'allPasswords')
     }
 
 }

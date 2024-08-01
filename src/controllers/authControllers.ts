@@ -44,6 +44,16 @@ class AuthControllers {
             next(e)
         }
     }
+    public async changePassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            const accesToken = req.res.locals.tokenPayload;
+            const {newPassword, oldPassword} = req.res.locals.paswords
+            const result = await authService.changePassword(accesToken, newPassword, oldPassword)
+            res.status(204).json(result)
+                } catch (e) {
+            next(e)
+                }
+    }
 }
 
 export const authControllers = new AuthControllers()

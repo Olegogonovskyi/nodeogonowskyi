@@ -8,11 +8,11 @@ class AuthMiddleware {
     public async checkAccesToken(req: Request, res: Response, next: NextFunction) {
         try {
             const header = req.headers.authorization;
-
             if (!header) {
                 throw new ApiErrors('Authorization header is missing', 401)
             }
             const token = header.split("Bearer ")[1];
+            req.res.locals.tokenPayload = token
             tokenService.checkToken(token, ToknEnam.ACCES)
             const pair = tokensRepository.findByTokenParams({accesstoken: token})
             if (!pair) {
@@ -42,20 +42,6 @@ class AuthMiddleware {
             next(e)
         }
     }
-
-    // public async checkActionToken(req: Request, res: Response, next: NextFunction) {
-    //     try {
-    //         const actionVerToken = req.body.token
-    //         if (!actionVerToken) {
-    //             throw new ApiErrors(' Verify token is missing', 401)
-    //         }
-    //         const payload = tokenService.checkToken(actionVerToken, ToknEnam.VERIFIED)
-    //         req.res.locals.jwtPayload = payload
-    //
-    //     } catch (e) {
-    //         throw new ApiErrors(' Verify token is not valid', 401)
-    //     }
-    // }
 
 }
 

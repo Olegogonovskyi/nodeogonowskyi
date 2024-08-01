@@ -10,6 +10,9 @@ class TokensRepository {
     public async deleteTokens(params: Partial<ITokenPair>) {
         await tokenModel.findOneAndDelete(params)
     }
+    public async deleteAll(params: Partial<ITokenPair>) {
+        await tokenModel.deleteMany(params)
+    }
     public async findByTokenParams(params: Partial<ITokenPair>): Promise<ITokenPair> {
         return await tokenModel.findOne(params)
     }
