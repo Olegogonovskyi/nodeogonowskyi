@@ -5,6 +5,7 @@ import {ApiErrors} from "./errors/error.api.service";
 import {configs} from "./configs/config";
 import {authRouter} from "./routes/auth.router";
 import {logoutRouter} from "./routes/logout.router";
+import {cronRunner} from "./crons";
 
 const app = express()
 app.use(express.json())
@@ -25,5 +26,6 @@ process.on("uncaughtException", (e) => {
 
 app.listen(configs.APP_PORT, configs.APP_HOST,async ()=> {
     mongoose.connect(configs.MONGO_URL).then(() => console.log('MongoDB connected'))
+    cronRunner()
     console.log(configs.APP_PORT)
 })
