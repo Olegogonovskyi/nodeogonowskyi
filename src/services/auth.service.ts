@@ -76,29 +76,37 @@ class AuthService {
 
     public async changePassword(accesToken: string, newPassword: string, oldPassword: string): Promise<string> {
         const {_userId} = await tokensRepository.findByTokenParams({accesstoken: accesToken})
-        console.log(_userId)
-        const {password} = await customerRepository.findByParams({_id: _userId})
-        console.log(password)
-        const passwordChekker = await passwordService.compare(oldPassword, password)
-        if (!passwordChekker) {
-            throw new ApiErrors("Invalid credentials", 401);
+        const {password, isVeryied} = await customerRepository.findByParams({_id: _userId})
+        if  (!isVeryied) {
+            throw new ApiErrors("You must verify!!", 401);
         }
+        const passwordChekker = await passwordService.compare(oldPassword, password)
+        try {
+            if (!passwordChekker) {
+                throw new ApiErrors("Invalid credentials", 401);
+            }
+                } catch (error) {
+            console.error(error.message);
+            return error.message
+                }
         const oldPasswords = await allPasswordsRepository.findAll(_userId)
-        oldPasswords.map(async (oldPass) =>  {
-
-            const chekker =  await passwordService.compare(newPassword, oldPass.password)
-            if  (chekker) {
+        // oldPasswords.map(async (oldPass) =>  {
+        //
+        //     const chekker =  await passwordService.compare(newPassword, oldPass.password)
+        //     if  (chekker) {
+        //         throw new ApiErrors("It was Your old Password", 400);
+        //     }
+        // }) //todo любий ментор, цей кусок коду я замінив, скажи будь ласка чому з ним не працювало (і запамятай - ти кращий ніч ті чати gpt )
+        for (const oldPass of oldPasswords) {
+            const chekker = await passwordService.compare(newPassword, oldPass.password);
+            if (chekker) {
                 throw new ApiErrors("It was Your old Password", 400);
             }
-        })
-
+        }
         const newPasswordHased = await passwordService.hash(newPassword)
-
         await allPasswordsRepository.create({password: newPasswordHased, _userId: _userId})
-
         await customerRepository.putChanges(_userId, {password: newPasswordHased})
         await tokensRepository.deleteAll({_userId: _userId})
-
         return newPasswordHased
     }
 
