@@ -86,9 +86,9 @@ class AuthService {
         const oldPasswords = await allPasswordsRepository.findAll(_userId)
         oldPasswords.map(async (oldPass) =>  {
 
-            let chekker =  await passwordService.compare(newPassword, oldPass.password)
+            const chekker =  await passwordService.compare(newPassword, oldPass.password)
             if  (chekker) {
-                throw new ApiErrors("It was Your old Password", 401);
+                throw new ApiErrors("It was Your old Password", 400);
             }
         })
 
