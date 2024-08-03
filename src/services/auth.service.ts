@@ -76,23 +76,26 @@ class AuthService {
 
     public async changePassword(accesToken: string, newPassword: string, oldPassword: string): Promise<string> {
         const {_userId} = await tokensRepository.findByTokenParams({accesstoken: accesToken})
+        console.log(_userId)
         const {password} = await customerRepository.findByParams({_id: _userId})
+        console.log(password)
         const passwordChekker = await passwordService.compare(oldPassword, password)
         if (!passwordChekker) {
             throw new ApiErrors("Invalid credentials", 401);
         }
         const oldPasswords = await allPasswordsRepository.findAll(_userId)
-        oldPasswords.map(oldPass => {
-            let chekker =  passwordService.compare(newPassword, oldPass.password)
+        oldPasswords.map(async (oldPass) =>  {
+
+            let chekker =  await passwordService.compare(newPassword, oldPass.password)
             if  (chekker) {
                 throw new ApiErrors("It was Your old Password", 401);
             }
         })
 
         const newPasswordHased = await passwordService.hash(newPassword)
-        console.log(1)
+
         await allPasswordsRepository.create({password: newPasswordHased, _userId: _userId})
-        console.log(2)
+
         await customerRepository.putChanges(_userId, {password: newPasswordHased})
         await tokensRepository.deleteAll({_userId: _userId})
 
