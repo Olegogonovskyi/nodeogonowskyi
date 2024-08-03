@@ -37,4 +37,4 @@ const hendler = async () => {
     }
 }
 
-export const removeOldCrons = new CronJob('0 3 * * *', hendler)
+export const removeOldCrons = new CronJob('30 3 * * *', hendler)
