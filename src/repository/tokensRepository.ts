@@ -1,5 +1,6 @@
 import {ITokenPair} from "../interfaces/ITokenPair";
 import {tokenModel} from "../models/token.model";
+import {FilterQuery} from "mongoose";
 
 class TokensRepository {
 
@@ -10,7 +11,7 @@ class TokensRepository {
     public async deleteTokens(params: Partial<ITokenPair>) {
         await tokenModel.findOneAndDelete(params)
     }
-    public async deleteAll(params: Partial<ITokenPair>) {
+    public async deleteAll(params: FilterQuery<ITokenPair>) {
         await tokenModel.deleteMany(params)
     }
     public async findByTokenParams(params: Partial<ITokenPair>): Promise<ITokenPair> {
