@@ -12,6 +12,7 @@ import {ActionToknEnam} from "../enums/actionToknEnam";
 import {configs} from "../configs/config";
 import {actionTokensRepository} from "../repository/actionTokensRepository";
 import {allPasswordsRepository} from "../repository/allPasswordsRepository";
+import {UploadedFile} from "express-fileupload";
 
 class AuthService {
     public async register(customer: ICustoner): Promise<{ newCustomer: ICustoner, tokens: ITokenPairGenre }> {
@@ -74,6 +75,13 @@ class AuthService {
         return await customerRepository.findByParams({_id: userId})
     }
 
+    public async changeAvatar(userId: string, file: UploadedFile){
+
+        // await customerRepository.putChanges(userId, {isVeryied: true})
+        // await actionTokensRepository.deleteTokens({actiontoken: actionVerToken})
+        // return await customerRepository.findByParams({_id: userId})
+    }
+
     public async changePassword(accesToken: string, newPassword: string, oldPassword: string): Promise<string> {
         const {_userId} = await tokensRepository.findByTokenParams({accesstoken: accesToken})
         const {password, isVeryied} = await customerRepository.findByParams({_id: _userId})
@@ -90,13 +98,7 @@ class AuthService {
             return error.message
                 }
         const oldPasswords = await allPasswordsRepository.findAll(_userId)
-        // oldPasswords.map(async (oldPass) =>  {
-        //
-        //     const chekker =  await passwordService.compare(newPassword, oldPass.password)
-        //     if  (chekker) {
-        //         throw new ApiErrors("It was Your old Password", 400);
-        //     }
-        // }) //todo любий ментор, цей кусок коду я замінив, скажи будь ласка чому з ним не працювало (і запамятай - ти кращий ніч ті чати gpt )
+
         for (const oldPass of oldPasswords) {
             const chekker = await passwordService.compare(newPassword, oldPass.password);
             if (chekker) {

@@ -11,6 +11,7 @@ const router = Router()
 
 router.post('/register', customerChekkerMiddleware.isCustomerValid(), authControllers.register)
 router.post('/login',  customerChekkerMiddleware.isCustomerValid(), authControllers.login)
+router.post('/me/changeAvatar', authMiddleware.checkAccesToken , authControllers.login)
 router.post('/refresh',   authMiddleware.checkRefrToken, authControllers.refresh)
 router.post('/verify',   actionTokenMiddleware.checkToken(ToknEnam.VERIFIED), authControllers.verify)
 router.post('/changePassword', authMiddleware.checkAccesToken, changePasswordChekkerMiddleware.isCustomerValid(), authControllers.changePassword  )

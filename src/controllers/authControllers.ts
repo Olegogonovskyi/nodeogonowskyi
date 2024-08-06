@@ -1,7 +1,10 @@
-import {Request, Response, NextFunction} from "express"
+import {NextFunction, Request, Response} from "express"
 import {authService} from "../services/auth.service";
 import {ICustoner} from "../interfaces/ICustoner";
 import {ITokenPayload} from "../interfaces/ITokenPayload";
+import {tokenService} from "../services/token.service";
+import {ToknEnam} from "../enums/toknEnam";
+import {UploadedFile } from "express-fileupload"
 
 class AuthControllers {
     public async register(req: Request, res: Response, next: NextFunction) {
@@ -50,6 +53,17 @@ class AuthControllers {
             const {newPassword, oldPassword} = req.res.locals.paswords
             const result = await authService.changePassword(accesToken, newPassword, oldPassword)
             res.status(204).json(result)
+                } catch (e) {
+            next(e)
+                }
+    }
+    public async changeAvatar(req: Request, res: Response, next: NextFunction) {
+        try {
+            const accesToken = req.res.locals.tokenPayload; //todo ьщже без змінної, а зразу в чек
+            const avatar = req.files?.avatar as UploadedFile
+            const {idUser} =  tokenService.checkToken(accesToken, ToknEnam.ACCES)
+            const result = await authService.changeAvatar(idUser, avatar)
+            res.status(201).json(result)
                 } catch (e) {
             next(e)
                 }
