@@ -70,6 +70,18 @@ class AuthControllers {
             next(e)
                 }
     }
+
+    public async deleteAvatar(req: Request, res: Response, next: NextFunction) {
+        try {
+            const accesToken = req.res.locals.tokenPayload; //todo ьщже без змінної, а зразу в чек
+            const {idUser} =  tokenService.checkToken(accesToken, ToknEnam.ACCES)
+            const customer = await authService.deleteAvatar(idUser)
+            const result = UserPresenter.toResponse(customer)
+            res.status(201).json(result)
+                } catch (e) {
+            next(e)
+                }
+    }
 }
 
 export const authControllers = new AuthControllers()

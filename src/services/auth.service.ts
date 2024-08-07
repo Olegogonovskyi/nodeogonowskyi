@@ -80,7 +80,7 @@ class AuthService {
         return await customerRepository.putChanges(userId, {avatar: avatar})
     }
 
-    public async deleteAvatar(customerId: string) {
+    public async deleteAvatar(customerId: string): Promise<ICustoner> {
         const customer = await customerRepository.findByParams({_id: customerId})
 
         if ( customer.avatar) {
