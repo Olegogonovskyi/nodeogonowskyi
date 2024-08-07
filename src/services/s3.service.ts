@@ -1,9 +1,8 @@
-import {PutObjectCommand, S3Client} from "@aws-sdk/client-s3"
+import {PutObjectCommand, S3Client, DeleteObjectCommand} from "@aws-sdk/client-s3"
 import {configs} from "../configs/config";
 import {UploadedFile} from "express-fileupload";
 import {randomUUID} from "crypto"
 import path from "node:path";
-
 
 
 class S3Service {
@@ -16,8 +15,10 @@ class S3Service {
                 secretAccessKey: configs.AWS_SECRET_ACCESS_KEY
             },
         }),
-    ) { }
-    public async uploadFile(ItemType: "user", itemId: string, file: UploadedFile): Promise<string> {
+    ) {
+    }
+
+    public async uploadFile(ItemType: "customer", itemId: string, file: UploadedFile): Promise<string> {
         const filePath = `${ItemType}/${itemId}/${randomUUID()}${path.extname(file.name)}`
         await this.s3Client.send(
             new PutObjectCommand({
@@ -29,6 +30,15 @@ class S3Service {
             })
         )
         return filePath
+    }
+
+    public async deleteFile(pathToFile: string) {
+        await this.s3Client.send(
+            new DeleteObjectCommand({
+                Bucket: configs.AWC_BUCKET_NAME,
+                Key: pathToFile
+            })
+        )
     }
 }
 

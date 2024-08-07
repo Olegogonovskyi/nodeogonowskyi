@@ -15,7 +15,7 @@ class CustomerRepository {
     }
 
     public async putChanges(id: string, params: Partial<ICustoner>) {
-        await customerModel.findOneAndUpdate({_id: id}, params)
+       return  await customerModel.findOneAndUpdate({_id: id}, params)
     }
 
     // public async pushToPasswords(customerId: string, lastPasswors: string) {

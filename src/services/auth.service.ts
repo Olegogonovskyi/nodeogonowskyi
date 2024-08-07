@@ -13,21 +13,17 @@ import {configs} from "../configs/config";
 import {actionTokensRepository} from "../repository/actionTokensRepository";
 import {allPasswordsRepository} from "../repository/allPasswordsRepository";
 import {UploadedFile} from "express-fileupload";
+import {s3Service} from "./s3.service";
 
 class AuthService {
     public async register(customer: ICustoner): Promise<{ newCustomer: ICustoner, tokens: ITokenPairGenre }> {
         const {email, password} = customer
-        console.log(1)
         await this.isEmailDuplicate(email)
-        console.log(2)
         const hashPassword = await passwordService.hash(password)
-        console.log(3)
         const newCustomer = await customerRepository.create({...customer, password: hashPassword})
-        console.log(4)
         const tokens = await tokenService.generePair({idUser: newCustomer._id})
-        console.log(5)
         await tokensRepository.create({...tokens, _userId: newCustomer._id})
-        await allPasswordsRepository.create({password: hashPassword, _userId:newCustomer._id })
+        await allPasswordsRepository.create({password: hashPassword, _userId: newCustomer._id})
         const actionVerToken = await tokenService.genreActionToken({idUser: newCustomer._id}, ActionToknEnam.VERIFIED)
         console.log(actionVerToken)
         await actionTokensRepository.create({
@@ -75,17 +71,28 @@ class AuthService {
         return await customerRepository.findByParams({_id: userId})
     }
 
-    public async changeAvatar(userId: string, file: UploadedFile){
+    public async changeAvatar(userId: string, file: UploadedFile): Promise<ICustoner> {
+        const customer = await customerRepository.findByParams({_id: userId})
+        const avatar = await s3Service.uploadFile("customer", userId, file)
+                if (customer.avatar) {
+            await s3Service.deleteFile(avatar)
+        }
+        return await customerRepository.putChanges(userId, {avatar: avatar})
+    }
 
-        // await customerRepository.putChanges(userId, {isVeryied: true})
-        // await actionTokensRepository.deleteTokens({actiontoken: actionVerToken})
-        // return await customerRepository.findByParams({_id: userId})
+    public async deleteAvatar(customerId: string) {
+        const customer = await customerRepository.findByParams({_id: customerId})
+
+        if ( customer.avatar) {
+            await s3Service.deleteFile(customer.avatar)
+        }
+        return await  customerRepository.putChanges(customerId, {avatar: null})
     }
 
     public async changePassword(accesToken: string, newPassword: string, oldPassword: string): Promise<string> {
         const {_userId} = await tokensRepository.findByTokenParams({accesstoken: accesToken})
         const {password, isVeryied} = await customerRepository.findByParams({_id: _userId})
-        if  (!isVeryied) {
+        if (!isVeryied) {
             throw new ApiErrors("You must verify!!", 401);
         }
         const passwordChekker = await passwordService.compare(oldPassword, password)
@@ -93,10 +100,10 @@ class AuthService {
             if (!passwordChekker) {
                 throw new ApiErrors("Invalid credentials", 401);
             }
-                } catch (error) {
+        } catch (error) {
             console.error(error.message);
             return error.message
-                }
+        }
         const oldPasswords = await allPasswordsRepository.findAll(_userId)
 
         for (const oldPass of oldPasswords) {

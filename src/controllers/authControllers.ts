@@ -5,6 +5,7 @@ import {ITokenPayload} from "../interfaces/ITokenPayload";
 import {tokenService} from "../services/token.service";
 import {ToknEnam} from "../enums/toknEnam";
 import {UploadedFile } from "express-fileupload"
+import {UserPresenter} from "../presenters/user.presenter";
 
 class AuthControllers {
     public async register(req: Request, res: Response, next: NextFunction) {
@@ -62,7 +63,8 @@ class AuthControllers {
             const accesToken = req.res.locals.tokenPayload; //todo ьщже без змінної, а зразу в чек
             const avatar = req.files?.avatar as UploadedFile
             const {idUser} =  tokenService.checkToken(accesToken, ToknEnam.ACCES)
-            const result = await authService.changeAvatar(idUser, avatar)
+            const customer = await authService.changeAvatar(idUser, avatar)
+            const result = UserPresenter.toResponse(customer)
             res.status(201).json(result)
                 } catch (e) {
             next(e)
