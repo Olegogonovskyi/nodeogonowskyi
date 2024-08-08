@@ -10,6 +10,7 @@ class FileMiddleware {
     ) {
         return (req: Request, res: Response, next: NextFunction) => {
             try {
+
                 const file = req.files?.[paramName] as UploadedFile;
                 if (!file) {
                     throw new ApiErrors("File not found", 400);

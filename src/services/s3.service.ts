@@ -14,6 +14,8 @@ class S3Service {
                 accessKeyId: configs.AWS_ACCESS_KEY,
                 secretAccessKey: configs.AWS_SECRET_ACCESS_KEY
             },
+
+            endpoint: configs.AWS_ENDPOINT_URL,
         }),
     ) {
     }

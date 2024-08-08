@@ -73,11 +73,13 @@ class AuthService {
 
     public async changeAvatar(userId: string, file: UploadedFile): Promise<ICustoner> {
         const customer = await customerRepository.findByParams({_id: userId})
-        const avatar = await s3Service.uploadFile("customer", userId, file)
-                if (customer.avatar) {
-            await s3Service.deleteFile(avatar)
+        if (customer.avatar) {
+            await s3Service.deleteFile(customer.avatar)
         }
-        return await customerRepository.putChanges(userId, {avatar: avatar})
+        const newAvatar = await s3Service.uploadFile("customer", userId, file)
+        const updCustomer = await customerRepository.putChanges(userId, {avatar: newAvatar})
+
+        return updCustomer
     }
 
     public async deleteAvatar(customerId: string): Promise<ICustoner> {

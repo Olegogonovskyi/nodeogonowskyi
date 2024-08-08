@@ -15,17 +15,10 @@ class CustomerRepository {
     }
 
     public async putChanges(id: string, params: Partial<ICustoner>): Promise<ICustoner> {
-       return  await customerModel.findOneAndUpdate({_id: id}, params)
+       return  await customerModel.findOneAndUpdate({_id: id}, params, {
+           returnDocument: "after",
+       })
     }
-
-    // public async pushToPasswords(customerId: string, lastPasswors: string) {
-    //     await customerModel.findByIdAndUpdate(customerId, { $push: { allPasswords: lastPasswors } },
-    //         { new: true })
-    // }
-    // public async findOldPasswords(): Promise<string[]> {
-    //     return await customerModel.find({}, 'allPasswords')
-    // }
-
 }
 
 export const customerRepository = new CustomerRepository()
