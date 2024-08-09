@@ -19,6 +19,7 @@ app.use('/auth', authRouter)
 app.use('/logout', logoutRouter)
 
 
+
 app.use('*', (err:ApiErrors, req: Request, res: Response, next: NextFunction) => {
     res.status(err.status || 500).json(err.message)
 });

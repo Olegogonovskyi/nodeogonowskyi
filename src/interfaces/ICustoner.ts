@@ -5,3 +5,5 @@ export interface ICustoner {
     isVeryied: boolean,
     avatar?: string
 }
+
+export interface ICustomerResponse extends Pick<ICustoner, "_id" | "email" | "isVeryied" | "avatar"> {}
