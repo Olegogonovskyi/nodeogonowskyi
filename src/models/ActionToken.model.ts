@@ -8,6 +8,7 @@ const schema = new Schema({
         type: String,
         required: true,
     },
+
     typeofToken: {
         type: String,
         enumerable: ActionToknEnam,
