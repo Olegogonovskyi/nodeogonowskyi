@@ -2,7 +2,8 @@ import {IUser} from "../interfaces/IUser";
 import {ApiErrors} from "../errors/error.api.service";
 import {UserModel} from "../models/user.model";
 import {IUserListQuery} from "../interfaces/IUserListQuery";
-import {FilterQuery} from "mongoose";
+import {FilterQuery, SortOrder} from "mongoose";
+import {UserListEnum} from "../enums/UserList.enum";
 
 
 class UserRepository {
@@ -15,8 +16,22 @@ class UserRepository {
                 { superpowers: { $regex: query.search, $options: "i" } },
             ]
         }
+        const sortObj: { [key: string]: SortOrder } = {};
+        switch (query.sortBy) {
+            case UserListEnum.NAME:
+                sortObj.name = query.sort;
+                break;
+            case UserListEnum.AGE:
+                sortObj.age = query.sort;
+                break;
+            case UserListEnum.GENDER:
+                sortObj.age = query.sort;
+                break;
+            default:
+                throw new Error("Invalid orderBy");
+        }
         return  await Promise.all([
-            UserModel.find(filterObj).limit(query.limit).skip(skip),
+            UserModel.find(filterObj).sort(sortObj).limit(query.limit).skip(skip),
             UserModel.countDocuments(filterObj)
         ])
     }
