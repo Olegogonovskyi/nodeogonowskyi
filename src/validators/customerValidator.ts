@@ -12,6 +12,6 @@ export class ItemValidator {
     })
     public static getListUsers = ItemValidator.getListCustomers.keys({
         sort: joi.string().valid(...Object.values(OrderEnum)).default(OrderEnum.ASC),
-        sortBy: joi.string().valid(...Object.values(UserListEnum)).default(UserListEnum.NAME)
+        sortBy: joi.string().valid(...Object.values(UserListEnum)).default(UserListEnum.AGE)
     });
 }

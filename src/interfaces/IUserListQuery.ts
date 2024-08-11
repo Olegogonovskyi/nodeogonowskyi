@@ -6,5 +6,5 @@ export interface IUserListQuery {
     page?: number,
     search?: string,
     sort?: OrderEnum,
-    sortBy: UserListEnum
+    sortBy?: UserListEnum
 }
